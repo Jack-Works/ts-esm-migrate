@@ -5,7 +5,7 @@
 		"access": "public"
 	},
 	"type": "module",
-	"bin": "./dist/index.js",
+	"bin": "./dist/index.mjs",
 	"dependencies": {
 		"@types/node": "^18.11.9",
 		"@types/prettier": "^2.7.1",
