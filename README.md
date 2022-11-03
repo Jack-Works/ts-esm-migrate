@@ -3,5 +3,5 @@
 ## Usage
 
 ```sh
-npx ts-esm-migrate <folder> [--jsx] [--prettier <prettier-config>]
+npx @magic-works/ts-esm-migrate <folder> [--jsx] [--prettier <prettier-config>]
 ```
