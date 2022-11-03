@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import ts from 'typescript'
 import { parseArgs } from 'node:util'
 import { join } from 'node:path'
