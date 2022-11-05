@@ -7,7 +7,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises'
 const { positionals, values } = parseArgs({
     allowPositionals: true,
     options: {
-        jsx: { type: 'boolean' },
+        jsx: { type: 'boolean', default: false },
         prettier: { type: 'string', short: 'p' },
     },
 })
@@ -76,10 +76,7 @@ const transform: ts.TransformerFactory<ts.SourceFile> = function (context) {
         ) {
             return factory.updateImportTypeNode(
                 node,
-                factory.updateLiteralTypeNode(
-                    node.argument,
-                    updateImportPath(node.argument.literal, factory)
-                ),
+                factory.updateLiteralTypeNode(node.argument, updateImportPath(node.argument.literal, factory)),
                 node.assertions,
                 node.qualifier,
                 node.typeArguments,
@@ -126,13 +123,13 @@ function updateImportPath(node: ts.Expression | undefined, factory: ts.NodeFacto
     if (spec.endsWith('.js')) return node
 
     const resolution = join(currentVisitingFile, '../', spec)
-    if (visited.has(resolution + '.ts')) {
+    if (visited.has(resolution + '.ts') || visited.has(resolution + '.d.ts')) {
         hasUpdate = true
         return factory.createStringLiteral(spec + '.js')
     } else if (visited.has(resolution + '.tsx')) {
         hasUpdate = true
         return factory.createStringLiteral(spec + (values.jsx ? '.jsx' : '.js'))
-    } else if (visited.has(join(resolution, 'index.ts'))) {
+    } else if (visited.has(join(resolution, 'index.ts')) || visited.has(join(resolution, 'index.d.ts'))) {
         hasUpdate = true
         return factory.createStringLiteral(spec + '/index.js')
     } else if (visited.has(join(resolution, 'index.tsx'))) {
